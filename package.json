@@ -1,0 +1,14 @@
+{
+  "name": "telegram-test-bot",
+  "version": "1.0.0",
+  "description": "Testing some telegram Bot chananigans",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^3.38.0"
+  }
+}
