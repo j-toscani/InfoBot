@@ -1,0 +1,9 @@
+{
+  "defaultSeverity": "error",
+  "extends": ["ts-lint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "no-console": false
+  },
+  "rulesDirectory": []
+}
