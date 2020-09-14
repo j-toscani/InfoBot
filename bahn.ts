@@ -1,5 +1,21 @@
-import createClient, { Station, Location, Stop, Journey } from "hafas-client";
+import createClient, { Journey } from "hafas-client";
 import dbProfile from "hafas-client/p/db";
+
+interface Stop {
+  line: string;
+  direction: string;
+  peopleOnTrain: string | undefined;
+  start: {
+    name: string | undefined;
+    departure: string | undefined;
+    departurePlatform: string | undefined;
+  };
+  end: {
+    name: string | undefined;
+    arrival: string | undefined;
+    arrivalPlatform: string | undefined;
+  };
+}
 
 const client = createClient(dbProfile, "Inf9Bot");
 
@@ -64,10 +80,10 @@ export async function getJourneyData(
   }
 }
 
-export function createReadableJourneyData(journey: Journey) {
+export function createReadableJourneyData(journey: Journey): Stop[] {
   const stops = journey.legs.map((leg) => {
     const { origin, destination, line } = leg;
-    const stopInformation = {
+    const stopInformation: Stop = {
       line: leg.line?.name || line?.additionalName || "Unbekannt",
       direction: leg.direction || "Unbekannt",
       peopleOnTrain: leg.loadFactor,
@@ -85,4 +101,23 @@ export function createReadableJourneyData(journey: Journey) {
     return stopInformation;
   });
   return stops;
+}
+
+function createStopString(obj: any, ignore?: string[]) {
+  let string = "";
+  for (const key in obj) {
+    // Do not make string from encapsulated Objects
+    if (key !== "start" && key !== "end") {
+      string = string + `${key}: ${obj[key]} \n `;
+    }
+  }
+  return string;
+}
+
+export function createOutputFormatString(stop: Stop): string[] {
+  const startInfo = createStopString(stop.start);
+  const endInfo = createStopString(stop.end);
+  const globalInfo = createStopString(stop);
+
+  return [globalInfo, startInfo, endInfo];
 }

@@ -4,6 +4,7 @@ import {
   getLocationIds,
   getJourneyData,
   createReadableJourneyData,
+  createOutputFormatString,
 } from "./bahn";
 
 dotenv.config();
@@ -21,13 +22,14 @@ bot.command("bahn", async (ctx) => {
     if (ctx.message?.text) {
       const [_command, start, end] = ctx.message.text.split(" ");
       const { from, to } = await getLocationIds(start, end);
-      ctx.reply(
-        `You start at ${JSON.stringify(from)}, and end at ${JSON.stringify(to)}`
-      );
+
       if (!from || !to) {
         ctx.reply("Was not able to find connection");
         return;
       }
+
+      ctx.reply("I found a connection for you!");
+
       const journeys = await getJourneyData(from, to);
       if (!journeys) {
         ctx.reply("Was not able to find journeys");
@@ -35,7 +37,17 @@ bot.command("bahn", async (ctx) => {
       }
 
       const readableData = createReadableJourneyData(journeys[0]);
-      ctx.reply(`This is jour Journey data ${JSON.stringify(readableData)}`);
+      const stopString = readableData.map((stop, index) => {
+        const strings = createOutputFormatString(stop);
+        return `This is jour Journey data for stop nr. ${
+          index + 1
+        } \n ${strings.concat()}`;
+      });
+
+      if (!ctx.chat) {
+        throw "No ChatID found";
+      }
+      ctx.telegram.sendMessage(ctx.chat.id, stopString.join(" \n \n "));
     } else {
       ctx.reply(
         "This command is not valid. Format is: '/bahn '<start>' '<ende>'"
