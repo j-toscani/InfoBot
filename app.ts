@@ -11,6 +11,8 @@ dotenv.config();
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "", { username: "InfoBot" });
 
+console.log(process.env.BOT_TOKEN?.length || undefined);
+
 bot.start((ctx) => {
   const sender =
     ctx.from?.username || JSON.stringify(ctx.from?.first_name) || "User";
