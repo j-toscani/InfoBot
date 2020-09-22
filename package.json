@@ -13,8 +13,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@types/node-fetch": "^2.5.7",
     "dotenv": "^8.2.0",
     "hafas-client": "^5.7.1",
+    "node-fetch": "^2.6.1",
     "telegraf": "^3.38.0"
   },
   "devDependencies": {

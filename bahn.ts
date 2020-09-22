@@ -5,16 +5,14 @@ interface Stop {
   line: string;
   direction: string;
   peopleOnTrain: string | undefined;
-  start: {
-    name: string | undefined;
-    departure: string | undefined;
-    departurePlatform: string | undefined;
-  };
-  end: {
-    name: string | undefined;
-    arrival: string | undefined;
-    arrivalPlatform: string | undefined;
-  };
+
+  from: string | undefined;
+  departure: string | undefined;
+  departurePlatform: string | undefined;
+
+  to: string | undefined;
+  arrival: string | undefined;
+  arrivalPlatform: string | undefined;
 }
 
 const client = createClient(dbProfile, "Inf9Bot");
@@ -80,44 +78,40 @@ export async function getJourneyData(
   }
 }
 
+function createDisplayTime(dateString: string) {
+  const date = new Date(dateString);
+  return `${date.getHours()}:${date.getMinutes()} Uhr`;
+}
+
 export function createReadableJourneyData(journey: Journey): Stop[] {
   const stops = journey.legs.map((leg) => {
     const { origin, destination, line } = leg;
+
     const stopInformation: Stop = {
       line: leg.line?.name || line?.additionalName || "Unbekannt",
-      direction: leg.direction || "Unbekannt",
       peopleOnTrain: leg.loadFactor,
-      start: {
-        name: origin.name,
-        departure: leg.departure,
-        departurePlatform: leg.departurePlatform,
-      },
-      end: {
-        name: destination.name,
-        arrival: leg.arrival,
-        arrivalPlatform: leg.arrivalPlatform,
-      },
+
+      from: origin.name,
+      departure: leg?.departure
+        ? createDisplayTime(leg.departure)
+        : "Unbekannt",
+      departurePlatform: leg.departurePlatform,
+
+      direction: leg.direction || "Unbekannt",
+
+      to: destination.name,
+      arrival: leg?.arrival ? createDisplayTime(leg.arrival) : "Unbekannt",
+      arrivalPlatform: leg.arrivalPlatform,
     };
     return stopInformation;
   });
   return stops;
 }
 
-function createStopString(obj: any, ignore?: string[]) {
+export function createStopString(obj: any) {
   let string = "";
   for (const key in obj) {
-    // Do not make string from encapsulated Objects
-    if (key !== "start" && key !== "end") {
-      string = string + `${key}: ${obj[key]} \n `;
-    }
+    string = string + `${key}: ${obj[key]} \n `;
   }
   return string;
-}
-
-export function createOutputFormatString(stop: Stop): string[] {
-  const startInfo = createStopString(stop.start);
-  const endInfo = createStopString(stop.end);
-  const globalInfo = createStopString(stop);
-
-  return [globalInfo, startInfo, endInfo];
 }

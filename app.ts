@@ -4,7 +4,7 @@ import {
   getLocationIds,
   getJourneyData,
   createReadableJourneyData,
-  createOutputFormatString,
+  createStopString,
 } from "./bahn";
 
 dotenv.config();
@@ -40,7 +40,7 @@ bot.command("bahn", async (ctx) => {
 
       const readableData = createReadableJourneyData(journeys[0]);
       const stopString = readableData.map((stop, index) => {
-        const strings = createOutputFormatString(stop);
+        const strings = createStopString(stop);
         return `This is jour Journey data for stop nr. ${
           index + 1
         } \n ${strings.concat()}`;
