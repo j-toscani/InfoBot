@@ -8,6 +8,12 @@
     "noImplicitAny": true,
     "esModuleInterop": true
   },
-  "include": ["./*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "./*.ts",
+    "commands/bahn.ts",
+    "commands/weather.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

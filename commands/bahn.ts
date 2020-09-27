@@ -118,7 +118,6 @@ export function createBahnInfoMessage(readableData: Stop[], journeyString: strin
 }
 
 async function handleBahnCommand(ctx: TelegrafContext) {
-
   try {
     if (ctx.message?.text) {
       const [_command, start, end] = ctx.message.text.split(" ");
