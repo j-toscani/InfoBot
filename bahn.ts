@@ -1,5 +1,6 @@
 import createClient, { Journey } from "hafas-client";
 import dbProfile from "hafas-client/p/db";
+import { TelegrafContext } from "telegraf/typings/context";
 
 interface Stop {
   line: string;
@@ -80,11 +81,11 @@ export async function getJourneyData(
 
 function createDisplayTime(dateString: string) {
   const date = new Date(dateString);
-  return `${date.getHours()}:${date.getMinutes()} Uhr`;
+  return `${date.getHours()}:${date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes()} Uhr`;
 }
 
 export function createReadableJourneyData(journey: Journey): Stop[] {
-  const stops = journey.legs.map((leg) => {
+  const stops = journey.legs.map((leg: any) => {
     const { origin, destination, line } = leg;
 
     const stopInformation: Stop = {
@@ -108,10 +109,54 @@ export function createReadableJourneyData(journey: Journey): Stop[] {
   return stops;
 }
 
-export function createStopString(obj: any) {
-  let string = "";
-  for (const key in obj) {
-    string = string + `${key}: ${obj[key]} \n `;
-  }
-  return string;
+export function createStopString(obj: Stop) {
+  return `Von ${obj.from} mit Linie ${obj.line} am Gleis ${obj.departurePlatform} um ${obj.departure} Uhr nach ${obj.to} Richtung ${obj.direction}. Ankunft auf Gleis ${obj.arrivalPlatform} um ${obj.arrival}. ${obj.peopleOnTrain ? 'Auslastung: ' + obj.peopleOnTrain : ''}`;
 }
+
+export function createBahnInfoMessage(readableData: Stop[], journeyString: string[]) {
+  return `Diese Verbindung hat ${journeyString.length > 1 ? 'einen Stopp' : journeyString.length + ' Stopps'} . Die Reise dauert vermutlich von ${readableData[0].departure} bis ${readableData[readableData.length - 1].arrival} \n` + journeyString.join("\n \n")
+}
+
+async function handleBahnCommand(ctx: TelegrafContext) {
+
+  try {
+    if (ctx.message?.text) {
+      const [_command, start, end] = ctx.message.text.split(" ");
+      const { from, to } = await getLocationIds(start, end);
+
+      if (!from || !to) {
+        ctx.reply("Was not able to find connection");
+        return;
+      }
+
+      ctx.reply("I found a connection for you!");
+
+      const journeys = await getJourneyData(from, to);
+      if (!journeys) {
+        ctx.reply("Was not able to find journeys");
+        return;
+      }
+
+      const readableData = createReadableJourneyData(journeys[0]);
+      const journeyString = readableData.map((stop, index) => {
+        const stopString = createStopString(stop);
+        return `Informationen zu Stop Nummer: ${index + 1
+          } \n${stopString}`;
+      });
+
+      if (!ctx.chat) {
+        throw "No ChatID found";
+      }
+      const botMessage = createBahnInfoMessage(readableData, journeyString);
+      ctx.telegram.sendMessage(ctx.chat.id, botMessage);
+    } else {
+      ctx.reply(
+        "This command is not valid. Format is: '/bahn '<start>' '<ende>'"
+      );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export default handleBahnCommand
