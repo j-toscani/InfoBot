@@ -5,8 +5,10 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "start": "node dist/app.js",
-    "build": "tsc",
+    "start": "npm run start:build && npm run start:run",
+    "start:run": "node dist/app.js",
+    "start:build": "tsc",
+    "dev": "concurrently \"npm run dev:watch\" \"npm run dev:start\"",
     "dev:start": "nodemon dist/app.js",
     "dev:watch": "tsc --watch"
   },
@@ -14,9 +16,11 @@
   "license": "ISC",
   "dependencies": {
     "@types/node-fetch": "^2.5.7",
+    "concurrently": "^5.3.0",
     "dotenv": "^8.2.0",
     "hafas-client": "^5.7.1",
     "node-fetch": "^2.6.1",
+    "prettier": "^2.1.2",
     "telegraf": "^3.38.0"
   },
   "devDependencies": {
