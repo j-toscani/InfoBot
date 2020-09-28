@@ -110,7 +110,7 @@ export function createReadableJourneyData(journey: Journey): Stop[] {
 }
 
 export function createStopString(obj: Stop) {
-  return `Von ${obj.from} mit Linie ${obj.line} am Gleis ${obj.departurePlatform} um ${obj.departure} Uhr nach ${obj.to} Richtung ${obj.direction}. Ankunft auf Gleis ${obj.arrivalPlatform} um ${obj.arrival}. ${obj.peopleOnTrain ? 'Auslastung: ' + obj.peopleOnTrain : ''}`;
+  return `Von ${obj.from} mit Linie ${obj.line} am Gleis ${obj.departurePlatform} um ${obj.departure} nach ${obj.to} Richtung ${obj.direction}. Ankunft auf Gleis ${obj.arrivalPlatform} um ${obj.arrival}. ${obj.peopleOnTrain ? 'Auslastung: ' + obj.peopleOnTrain : ''}`;
 }
 
 export function createBahnInfoMessage(readableData: Stop[], journeyString: string[]) {
