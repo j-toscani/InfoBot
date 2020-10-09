@@ -1,3 +1,4 @@
 .env
 keys.txt
+/dist
 node_modules
