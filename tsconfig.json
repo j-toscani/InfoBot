@@ -10,6 +10,7 @@
   },
   "include": [
     "./*.ts",
+    "./api/*.ts",
     "commands/bahn.ts",
     "commands/weather.ts"
   ],
