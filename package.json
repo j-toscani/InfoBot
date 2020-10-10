@@ -5,9 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "test",
-    "start": "npm run start:build && npm run start:run",
-    "start:run": "node dist/app.js",
-    "start:build": "tsc",
+    "start": "node dist/app.js",
+    "build": "tsc",
     "dev": "concurrently \"npm run dev:watch\" \"npm run dev:start\"",
     "dev:start": "nodemon dist/app.js",
     "dev:watch": "tsc --watch"
