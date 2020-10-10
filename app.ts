@@ -12,8 +12,8 @@ const PORT = process.env.PORT || 3000
 const URL = process.env.URL || 'https://your-heroku-app.herokuapp.com';
 
 const bot = new Telegraf(process.env.BOT_TOKEN || "", { username: "InfoBot" });
-bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
-expressApp.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
+//bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
+//expressApp.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 
 bot.start((ctx) => {
   const sender =
@@ -26,6 +26,8 @@ bot.help(ctx => {
 })
 
 bot.command("bahn", handleBahnCommand);
+
+bot.launch()
 
 // @ts-ignore
 expressApp.get('/', (req, res) => {
