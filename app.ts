@@ -1,24 +1,22 @@
 import Telegraf from "telegraf";
 import dotenv from "dotenv";
-import fs from 'fs';
 import handleBahnCommand from "./commands/bahn";
+
+const express = require('express')
+const expressApp = express()
 
 dotenv.config();
 
+const port = process.env.PORT || 3000
+expressApp.get('/', (req: Request, res: Response) => {
+  //@ts-ignore
+  res.send('Hello World!')
+})
+expressApp.listen(port, () => {
+  console.log(`Listening on port ${port}`)
+})
+
 const bot = new Telegraf(process.env.BOT_TOKEN || "", { username: "InfoBot" });
-
-const tlsOptions = {
-  key: fs.readFileSync('server-key.pem'),
-  cert: fs.readFileSync('server-cert.pem'),
-}
-
-bot.telegram.setWebhook('https://server.tld:8443/secret-path')
-
-// Start https webhook
-bot.startWebhook('/secret-path', tlsOptions, 8443)
-
-// Http webhook, for nginx/heroku users.
-bot.startWebhook('/secret-path', null, 5000)
 
 bot.start((ctx) => {
   const sender =
@@ -32,4 +30,4 @@ bot.help(ctx => {
 
 bot.command("bahn", handleBahnCommand);
 
-bot.launch();
+bot.startPolling();
