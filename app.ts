@@ -26,6 +26,26 @@ bot.help(ctx => {
 })
 
 bot.command("bahn", handleBahnCommand);
+bot.command("roll", async function handleBahnCommand(ctx) {
+  try {
+    if (ctx.message?.text) {
+      const [_command, number] = ctx.message.text.split(" ");
+
+      const returnNumber = parseInt(number);
+
+      const randomNumber = Math.ceil(Math.random() * returnNumber);
+
+      ctx.reply(
+        randomNumber.toString()
+      );
+    }
+  } catch (err) {
+    console.log(err);
+    ctx.reply(
+      "fehler"
+    );
+  }
+});
 
 bot.launch()
 
