@@ -30,13 +30,19 @@ bot.command("roll", async function handleBahnCommand(ctx) {
   try {
     if (ctx.message?.text) {
       const [_command, number] = ctx.message.text.split(" ");
-
+      const sender = ctx.from?.username || JSON.stringify(ctx.from?.first_name) || "User";
       const returnNumber = parseInt(number);
+
+      if (isNaN(returnNumber)) {
+        ctx.reply(
+          "Lass den Blödsinn! Ich nehme nur Zahlen an!"
+        );
+      }
 
       const randomNumber = Math.ceil(Math.random() * returnNumber);
 
       ctx.reply(
-        randomNumber.toString()
+        `${sender}, deine Nummer ist: ${randomNumber}`
       );
     }
   } catch (err) {
@@ -49,10 +55,3 @@ bot.command("roll", async function handleBahnCommand(ctx) {
 
 bot.launch()
 
-// @ts-ignore
-expressApp.get('/', (req, res) => {
-  res.send('Hello World!');
-});
-expressApp.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
