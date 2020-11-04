@@ -1,15 +1,16 @@
 import Telegraf from "telegraf";
 import dotenv from "dotenv";
 import handleBahnCommand from "./commands/bahn";
-
-const express = require('express')
-const expressApp = express()
+import handleDiceCommand from "./commands/dice";
 
 dotenv.config();
 
-const BOT_TOKEN = process.env.BOT_TOKEN
+const BOT_TOKEN = process.env.BOT_TOKEN || "";
+const BOT_OPTIONS = {
+  username: "InfoBot",
+};
 
-const bot = new Telegraf(process.env.BOT_TOKEN || "", { username: "InfoBot" });
+const bot = new Telegraf(BOT_TOKEN, BOT_OPTIONS);
 
 bot.start((ctx) => {
   const sender =
@@ -17,30 +18,15 @@ bot.start((ctx) => {
   ctx.reply(`Moin, ${sender}. Was möchtest du wissen?`);
 });
 
-bot.help(ctx => {
-  ctx.reply(`Folgende Commandos stehen dir zur Verfügung: \n /bahn <start> <ziel> \n /roll <zahl>`);
-})
-
-bot.command("bahn", handleBahnCommand);
-bot.command("roll", async function handleBahnCommand(ctx) {
-  try {
-    if (ctx.message?.text) {
-      const [_command, number] = ctx.message.text.split(" ");
-
-      const returnNumber = parseInt(number);
-
-      const randomNumber = Math.ceil(Math.random() * returnNumber);
-
-      ctx.reply(
-        randomNumber.toString()
-      );
-    }
-  } catch (err) {
-    console.log(err);
-    ctx.reply(
-      "fehler"
-    );
-  }
+bot.help((ctx) => {
+  ctx.reply(
+    `Folgende Commandos stehen dir zur Verfügung: \n /bahn <start> <ziel>`
+  );
 });
 
-bot.launch()
+bot.command("bahn", handleBahnCommand);
+bot.command("roll", handleDiceCommand);
+
+bot.launch();
+
+bot.launch();
