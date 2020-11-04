@@ -17,7 +17,8 @@
     "dotenv": "^8.2.0",
     "hafas-client": "^5.7.1",
     "node-fetch": "^2.6.1",
-    "telegraf": "^3.38.0"
+    "telegraf": "^3.38.0",
+    "winston": "^3.3.3"
   },
   "devDependencies": {
     "prettier": "^2.1.2",
