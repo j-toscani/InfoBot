@@ -3,9 +3,6 @@ import dotenv from "dotenv";
 import handleBahnCommand from "./commands/bahn";
 import handleDiceCommand from "./commands/dice";
 
-const express = require("express");
-const expressApp = express();
-
 dotenv.config();
 
 const BOT_TOKEN = process.env.BOT_TOKEN || "";
