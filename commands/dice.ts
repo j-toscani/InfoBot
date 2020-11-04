@@ -22,6 +22,7 @@ async function handleDiceCommand(ctx: TelegrafContext) {
 
       if (isNaN(returnNumber)) {
         ctx.reply("Bitte formuliere den Befehl wie folgt: \n /roll <zahl>");
+	return;
       }
 
       const randomNumber = Math.round(Math.random() * returnNumber);
