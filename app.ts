@@ -3,14 +3,14 @@ import dotenv from "dotenv";
 import handleBahnCommand from "./commands/bahn";
 import handleDiceCommand from "./commands/dice";
 
-const express = require("express");
-const expressApp = express();
-
 dotenv.config();
 
-const BOT_TOKEN = process.env.BOT_TOKEN
+const BOT_TOKEN = process.env.BOT_TOKEN || "";
+const BOT_OPTIONS = {
+  username: "InfoBot",
+};
 
-const bot = new Telegraf(process.env.BOT_TOKEN || "", { username: "InfoBot" });
+const bot = new Telegraf(BOT_TOKEN, BOT_OPTIONS);
 
 bot.start((ctx) => {
   const sender =
@@ -29,4 +29,4 @@ bot.command("roll", handleDiceCommand);
 
 bot.launch();
 
-bot.launch()
+bot.launch();
