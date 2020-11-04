@@ -1,4 +1,5 @@
 import { TelegrafContext } from "telegraf/typings/context";
+import logger from "../lib/logger";
 
 async function handleDiceCommand(ctx: TelegrafContext) {
   try {
@@ -8,8 +9,8 @@ async function handleDiceCommand(ctx: TelegrafContext) {
         .filter((item: string) => (item ? true : false))
         .map((item: string) => item.trim());
 
-      console.log(
-        `Recieved at ${ctx.message?.date}, from ${
+      logger.info(
+        `Recieved message on ${new Date(ctx.message?.date).toString()}, from ${
           ctx.message?.from
         }: ${sanitzedMsgArray.join(" ")}`
       );
