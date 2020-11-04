@@ -3,3 +3,4 @@ keys.txt
 /dist
 node_modules
 .vercel
+*.log
