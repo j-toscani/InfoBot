@@ -3,10 +3,18 @@ import { TelegrafContext } from "telegraf/typings/context";
 async function handleDiceCommand(ctx: TelegrafContext) {
   try {
     if (ctx.message?.text) {
-      const [_command, number] = ctx.message.text
+      const sanitzedMsgArray = ctx.message.text
         .split(" ")
         .filter((item: string) => (item ? true : false))
         .map((item: string) => item.trim());
+
+      console.log(
+        `Recieved at ${ctx.message?.date}, from ${
+          ctx.message?.from
+        }: ${sanitzedMsgArray.join(" ")}`
+      );
+
+      const [_command, number] = sanitzedMsgArray;
       const sender =
         ctx.from?.username || JSON.stringify(ctx.from?.first_name) || "User";
       const returnNumber = parseInt(number);
